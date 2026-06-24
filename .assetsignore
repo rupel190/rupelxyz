@@ -1,0 +1,12 @@
+# Only the built site should be served — exclude tooling/source/deps.
+node_modules
+content
+build.ts
+package.json
+package-lock.json
+tsconfig.json
+types.d.ts
+wrangler.jsonc
+.nvmrc
+.assetsignore
+.gitignore
