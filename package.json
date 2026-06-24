@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node build.ts"
+    "build": "bun ./build.ts"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
