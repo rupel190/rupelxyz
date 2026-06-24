@@ -228,6 +228,20 @@
     aspect-ratio: 21/9;
   }
 
+  /* Art section: masonry columns so full pieces show at natural proportions */
+  .portfolio-grid.art {
+    display: block;
+    column-count: 3;
+    column-gap: 2px;
+  }
+  .portfolio-grid.art .portfolio-item {
+    break-inside: avoid;
+    margin-bottom: 2px;
+  }
+  .portfolio-grid.art .portfolio-item img {
+    aspect-ratio: auto;
+  }
+
   .portfolio-item:hover img {
     opacity: 0.85;
   }
@@ -379,6 +393,7 @@
     .masthead-meta { text-align: left; }
     .masthead-name { font-size: 2rem; }
     .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+    .portfolio-grid.art { column-count: 2; }
     .portfolio-item.wide { grid-column: span 2; }
     .timeline-item { grid-template-columns: 90px 1fr; gap: 16px; }
   }
@@ -590,7 +605,7 @@
       </div>
     </div>
     <div class="section-sub" style="break-before: page;">Drawing & Illustration</div>
-    <div class="portfolio-grid">
+    <div class="portfolio-grid art">
       
       <div class="portfolio-item">
         <img src="assets/invisible-hand-of-the-market.webp" alt="Invisible Hand of the Market" loading="lazy" decoding="async" width="800" height="1200">
