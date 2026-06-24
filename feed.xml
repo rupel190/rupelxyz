@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Christoph Rippel — Writing</title>
+  <link>https://rupel.xyz/writing/</link>
+  <atom:link href="https://rupel.xyz/feed.xml" rel="self" type="application/rss+xml"/>
+  <description>Essays and notes by Christoph Rippel.</description>
+  <item>
+    <title>Disco Elysium</title>
+    <link>https://rupel.xyz/writing/disco-elysium</link>
+    <guid>https://rupel.xyz/writing/disco-elysium</guid>
+    <pubDate>Wed, 24 Jun 2026 12:00:00 GMT</pubDate>
+    <description>Learnings throughout 5 years</description>
+  </item>
+</channel>
+</rss>

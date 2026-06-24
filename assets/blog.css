@@ -1,0 +1,94 @@
+:root {
+  --ink: #1a1410; --paper: #f0ebe2; --warm: #c8794a; --gold: #c9a84c;
+  --rust: #8b3a1e; --muted: #7a6e62; --line: #d4ccc0; --dark: #2a2018;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.7;
+}
+
+/* same paper-grain overlay as the homepage */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.3;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+.page { max-width: 720px; margin: 0 auto; padding: 48px 28px 120px; }
+.post { max-width: 680px; }
+
+.topnav {
+  display: flex;
+  gap: 24px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 48px;
+}
+.topnav a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); }
+.topnav a:hover { color: var(--warm); border-color: var(--warm); }
+
+/* shared serif headings */
+.writing-head h1, .post-head h1 {
+  font-family: 'DM Serif Display', serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* index */
+.writing-head h1 { font-size: 2.6rem; }
+.writing-sub { color: var(--muted); font-style: italic; margin-top: 8px; }
+.writing-sub a { color: var(--warm); }
+.entries { list-style: none; margin-top: 40px; }
+.entry { padding: 20px 0; border-bottom: 1px solid var(--line); }
+.entry-link { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; text-decoration: none; color: var(--ink); }
+.entry-title { font-family: 'DM Serif Display', serif; font-size: 1.4rem; }
+.entry-link:hover .entry-title { color: var(--warm); }
+.entry-date { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+.entry-desc { color: var(--muted); margin-top: 6px; font-size: 0.98rem; }
+
+/* post */
+.post-head { margin-bottom: 36px; padding-bottom: 24px; border-bottom: 2px solid var(--ink); }
+.post-head h1 { font-size: 2.8rem; }
+.post-meta { margin-top: 14px; font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.post-meta .tags { color: var(--gold); }
+.post-meta .rating { color: var(--gold); text-transform: none; letter-spacing: 0; font-weight: 500; }
+
+.prose > * + * { margin-top: 1.25em; }
+.prose p { line-height: 1.8; }
+.prose h2, .prose h3 { font-family: 'DM Serif Display', serif; font-weight: 400; line-height: 1.2; margin-top: 1.8em; }
+.prose h2 { font-size: 1.7rem; }
+.prose h3 { font-size: 1.3rem; }
+.prose a { color: var(--rust); text-decoration: none; border-bottom: 1px solid var(--warm); }
+.prose a:hover { background: rgba(200, 121, 74, 0.12); }
+.prose blockquote { border-left: 3px solid var(--warm); padding-left: 20px; color: var(--muted); font-style: italic; }
+.prose img { max-width: 100%; height: auto; display: block; margin: 1.5em 0; border-radius: 2px; }
+.prose code { font-family: 'DM Mono', monospace; font-size: 0.85em; background: rgba(42, 32, 24, 0.06); padding: 0.1em 0.35em; border-radius: 3px; }
+.prose pre { background: var(--dark); color: var(--paper); padding: 18px; border-radius: 4px; overflow: auto; font-size: 0.85rem; }
+.prose pre code { background: none; padding: 0; }
+.prose ul, .prose ol { padding-left: 1.4em; }
+.prose hr { border: none; border-top: 1px solid var(--line); margin: 2em 0; }
+.prose .footnotes { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--line); margin-top: 3em; padding-top: 1em; }
+
+.post-foot { margin-top: 64px; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.post-foot a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); }
+.post-foot a:hover { color: var(--warm); }
+
+@media (max-width: 600px) {
+  .post-head h1 { font-size: 2rem; }
+  .writing-head h1 { font-size: 2rem; }
+  .entry-link { flex-direction: column; gap: 4px; }
+}
