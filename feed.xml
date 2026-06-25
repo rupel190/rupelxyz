@@ -12,5 +12,12 @@
     <pubDate>Wed, 24 Jun 2026 12:00:00 GMT</pubDate>
     <description>Learnings throughout 5 years</description>
   </item>
+  <item>
+    <title>Are you graduating out of your old role?</title>
+    <link>https://rupel.xyz/writing/graduating-roles</link>
+    <guid>https://rupel.xyz/writing/graduating-roles</guid>
+    <pubDate>Thu, 25 Jun 2026 12:00:00 GMT</pubDate>
+    <description>Are you moving up the abstraction stack?</description>
+  </item>
 </channel>
 </rss>

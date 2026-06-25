@@ -58,7 +58,7 @@ const loaded = readdirSync(SRC)
     return { slug: (data.slug as string) || basename(f, ".md"), data, content };
   })
   .filter((p) => !p.data.draft)
-  .sort((a, b) => String(b.data.date).localeCompare(String(a.data.date)));
+  .sort((a, b) => String(b.data.date ?? b.data.created).localeCompare(String(a.data.date ?? a.data.created)));
 
 // --- [[wikilinks]] → links to published posts, else plain text ---
 const lookup = new Map<string, string>();
@@ -76,7 +76,7 @@ const resolveWikilinks = (text: string) =>
 const posts: Post[] = loaded.map((p) => ({
   slug: p.slug,
   title: String(p.data.title || p.slug),
-  date: toISODate(p.data.date),
+  date: toISODate(p.data.date ?? p.data.created),
   description: String(p.data.description || ""),
   tags: Array.isArray(p.data.tags) ? p.data.tags.map(String) : [],
   rating: p.data.rating != null && p.data.rating !== "" ? Number(p.data.rating) : null,

@@ -5,6 +5,9 @@
   "observability": {
     "enabled": true
   },
+  "build": {
+    "command": "bun install && bun run build"
+  },
   "assets": {
     "directory": "."
   },
