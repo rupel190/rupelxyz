@@ -268,6 +268,18 @@
     line-height: 1.3;
   }
 
+  .portfolio-caption .title a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.55);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .portfolio-caption .title a:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+
   .portfolio-caption .desc {
     font-size: 0.78rem;
     color: #9a8e82;
@@ -412,6 +424,7 @@
       <a href="mailto:christoph@rippel.cc">christoph@rippel.cc</a><br>
       <a href="https://github.com/rupel190">github.com/rupel190</a><br>
       <a href="https://www.linkedin.com/in/christoph-rippel-964508171/">linkedin</a><br>
+      <a href="/writing/">writing</a><br>
       April 2026
     </div>
   </header>
@@ -462,19 +475,35 @@
         <img src="assets/guess-the-cs-skin.webp" alt="Guess the CS Skin" loading="lazy" decoding="async" width="900" height="566">
         <div class="portfolio-caption">
           <span class="cat">Web / Game</span>
-          <span class="title">Guess the CS Skin</span>
-          <span class="desc">Like GuessTheGame, but for CS2 weapon skins. Live at guess-the-skin-game.rupel190.workers.dev. Cloudflare Workers. 2025.</span>
+          <span class="title"><a href="https://guess-the-cs2-skin.rupel.xyz" target="_blank" rel="noopener noreferrer">Guess the CS Skin</a></span>
+          <span class="desc">Like GuessTheGame, but for CS2 weapon skins. Live at guess-the-cs2-skin.rupel.xyz. Cloudflare Workers. 2025.</span>
+        </div>
+      </div>
+      <div class="portfolio-item">
+        <img src="assets/songmap.webp" alt="Songmap — song structure &amp; arrangement analyzer" loading="lazy" decoding="async" width="900" height="977">
+        <div class="portfolio-caption">
+          <span class="cat">Web / Music Tech</span>
+          <span class="title"><a href="https://songmap.rupel.xyz" target="_blank" rel="noopener noreferrer">Songmap</a></span>
+          <span class="desc">Client-side song structure &amp; arrangement analyzer. Svelte 5 + Vite. Live at songmap.rupel.xyz. Cloudflare Pages. 2025.</span>
         </div>
       </div>
     </div>
     <div class="section-sub">3D Modeling & Product Design</div>
     <div class="portfolio-grid">
       <div class="portfolio-item">
-        <img src="assets/apple-watch-surface-modeling-study.webp" alt="Apple Watch — Surface Modeling Study" loading="lazy" decoding="async" width="900" height="504">
+        <img src="assets/apple-watch-surface-modeling-study.webp" alt="Apple Watch — Surface Modeling Study" loading="lazy" decoding="async" width="900" height="497">
         <div class="portfolio-caption">
           <span class="cat">CAD / Plasticity</span>
           <span class="title">Apple Watch — Surface Modeling Study</span>
           <span class="desc">Learning exercise in Plasticity. Complex curved surfaces, buttons, crown detail. In progress.</span>
+        </div>
+      </div>
+      <div class="portfolio-item">
+        <img src="assets/motorcycle-surface-modeling-study.webp" alt="Motorcycle — Surface Modeling Study" loading="lazy" decoding="async" width="900" height="580">
+        <div class="portfolio-caption">
+          <span class="cat">CAD / Plasticity</span>
+          <span class="title">Motorcycle — Surface Modeling Study</span>
+          <span class="desc">Learning exercise in Plasticity, same tutorial series as the Apple Watch. Hard-surface fairings, tank, spoked wheels, drilled brake discs. In progress.</span>
         </div>
       </div>
       <div class="portfolio-item">
@@ -486,7 +515,7 @@
         </div>
       </div>
       <div class="portfolio-item">
-        <img src="assets/dog-ball-thrower.webp" alt="Dog Ball Thrower" loading="lazy" decoding="async" width="900" height="611">
+        <img src="assets/dog-ball-thrower.webp" alt="Dog Ball Thrower" loading="lazy" decoding="async" width="900" height="576">
         <div class="portfolio-caption">
           <span class="cat">CAD / Plasticity</span>
           <span class="title">Dog Ball Thrower</span>

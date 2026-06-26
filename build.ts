@@ -58,7 +58,10 @@ const loaded = readdirSync(SRC)
     return { slug: (data.slug as string) || basename(f, ".md"), data, content };
   })
   .filter((p) => !p.data.draft)
-  .sort((a, b) => String(b.data.date ?? b.data.created).localeCompare(String(a.data.date ?? a.data.created)));
+  // Sort newest-first on a normalized ISO key. NB: js-yaml parses unquoted `date:`/`created:`
+  // into Date objects, and String(Date) is "Wed Jun 24 2026 …" — which localeCompare would sort
+  // by weekday name, not chronologically. toISODate() collapses both to "YYYY-MM-DD" first.
+  .sort((a, b) => toISODate(b.data.date ?? b.data.created).localeCompare(toISODate(a.data.date ?? a.data.created)));
 
 // --- [[wikilinks]] → links to published posts, else plain text ---
 const lookup = new Map<string, string>();
