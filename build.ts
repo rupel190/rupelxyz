@@ -201,10 +201,36 @@ ${items}
 `;
 };
 
+// --- sitemap ---
+// Hand-maintained sitemaps rot: they list the homepage and forget every post.
+// Generate it here so it always covers home + the writing index + every published post.
+const sitemap = () => {
+  const today = new Date().toISOString().slice(0, 10);
+  const newest = posts[0]?.date || today; // posts are sorted newest-first
+  const urls = [
+    { loc: `${SITE}/`, lastmod: today, changefreq: "weekly", priority: "1.0" },
+    { loc: `${SITE}/writing/`, lastmod: newest, changefreq: "weekly", priority: "0.8" },
+    ...posts.map((p) => ({ loc: `${SITE}/writing/${p.slug}`, lastmod: p.date || today, changefreq: "monthly", priority: "0.6" })),
+  ];
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map((u) => `  <url>
+    <loc>${u.loc}</loc>
+    <lastmod>${u.lastmod}</lastmod>
+    <changefreq>${u.changefreq}</changefreq>
+    <priority>${u.priority}</priority>
+  </url>`)
+  .join("\n")}
+</urlset>
+`;
+};
+
 // --- write everything ---
 rmSync(OUT, { recursive: true, force: true }); // clear stale pages so deleted posts don't linger
 mkdirSync(OUT, { recursive: true });
 for (const p of posts) writeFileSync(join(OUT, `${p.slug}.html`), postPage(p));
 writeFileSync(join(OUT, "index.html"), indexPage());
 writeFileSync(join(ROOT, "feed.xml"), feed());
-console.log(`Built ${posts.length} post(s) → /writing/ + index + feed.xml`);
+writeFileSync(join(ROOT, "sitemap.xml"), sitemap());
+console.log(`Built ${posts.length} post(s) → /writing/ + index + feed.xml + sitemap.xml`);
