@@ -16,7 +16,7 @@ edited: 00:36:00
 ---
 Another one of the AI good bad posts. What to say - it's here to stay. But it's not your usual conviction attempt, I promise.
 
-Let's get the legitimate reasons to dislike AsI out of the way: Socio-economic disruptions, RAM prices, people complaining about RAM prices, buying RAM at RAM prices. But let's assume the other side, and no, it's not about selling your RAM.
+Let's get the legitimate reasons to dislike AI out of the way: Socio-economic disruptions, RAM prices, people complaining about RAM prices, buying RAM at RAM prices. But let's assume the other side, and no, it's not about selling your RAM.
 
 This other side is more exciting. I've been an early "user", gathered tons of expertise. I had skills that didn't have names yet, which meant I didn't know I had them, which meant I couldn't brag to anyone I had them: "Prompt engineering?" "So that's what I've been doing - finally I don't seem clueless."
 
