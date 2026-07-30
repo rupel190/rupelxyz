@@ -6,6 +6,13 @@
   <atom:link href="https://rupel.xyz/feed.xml" rel="self" type="application/rss+xml"/>
   <description>Essays and notes by Christoph Rippel.</description>
   <item>
+    <title>Should you have a personal website?</title>
+    <link>https://rupel.xyz/writing/personal-website-meta</link>
+    <guid>https://rupel.xyz/writing/personal-website-meta</guid>
+    <pubDate>Fri, 26 Jun 2026 12:00:00 GMT</pubDate>
+    <description>It's funnecessary...</description>
+  </item>
+  <item>
     <title>Are you graduating out of your old role?</title>
     <link>https://rupel.xyz/writing/graduating-roles</link>
     <guid>https://rupel.xyz/writing/graduating-roles</guid>
