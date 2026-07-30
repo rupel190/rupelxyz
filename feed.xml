@@ -6,6 +6,20 @@
   <atom:link href="https://rupel.xyz/feed.xml" rel="self" type="application/rss+xml"/>
   <description>Essays and notes by Christoph Rippel.</description>
   <item>
+    <title>Expert in a dying field</title>
+    <link>https://rupel.xyz/writing/music-gear-obsolescence</link>
+    <guid>https://rupel.xyz/writing/music-gear-obsolescence</guid>
+    <pubDate>Sat, 18 Jul 2026 12:00:00 GMT</pubDate>
+    <description>What music gear knows about obsolescence</description>
+  </item>
+  <item>
+    <title>When the inner teacher drowns</title>
+    <link>https://rupel.xyz/writing/prowess-teaching-patience</link>
+    <guid>https://rupel.xyz/writing/prowess-teaching-patience</guid>
+    <pubDate>Sat, 04 Jul 2026 12:00:00 GMT</pubDate>
+    <description>On becoming impatient</description>
+  </item>
+  <item>
     <title>Should you have a personal website?</title>
     <link>https://rupel.xyz/writing/personal-website-meta</link>
     <guid>https://rupel.xyz/writing/personal-website-meta</guid>
