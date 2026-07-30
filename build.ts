@@ -36,12 +36,17 @@ const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTHS_FULL = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 // gray-matter/js-yaml parses an unquoted `date: 2026-06-24` into a Date object — normalize to YYYY-MM-DD.
 const toISODate = (d: unknown): string =>
   d instanceof Date ? d.toISOString().slice(0, 10) : String(d ?? "").slice(0, 10);
 const fmtDate = (d: string) => {
   const [y, m, day] = d.split("-").map(Number);
   return y ? `${MONTHS[(m || 1) - 1]} ${day}, ${y}` : d;
+};
+const fmtMonthYear = (d: string) => {
+  const [y, m] = d.split("-").map(Number);
+  return y ? `${MONTHS_FULL[(m || 1) - 1]} ${y}` : d;
 };
 
 type Post = { slug: string; title: string; date: string; description: string; tags: string[]; rating: number | null; html: string };
@@ -226,6 +231,29 @@ ${urls
 `;
 };
 
+// --- homepage "last updated" stamp ---
+// A stale masthead date is worse than none — derive it from the newest post instead of typing it.
+// (A build timestamp would move for a CSS tweak; the newest post's date is the honest signal.)
+// Rewrites one marked element in index.html in place; a missing marker throws rather than skipping.
+const stampHomepage = () => {
+  const file = join(ROOT, "index.html");
+  const newest = posts[0]?.date; // posts are sorted newest-first
+  if (!newest) {
+    console.warn("! No published posts — leaving the homepage date alone.");
+    return;
+  }
+  const html = readFileSync(file, "utf8");
+  const marker = /<time class="masthead-updated"[^>]*>[^<]*<\/time>/;
+  if (!marker.test(html)) {
+    throw new Error('index.html: missing <time class="masthead-updated"> — the homepage date can no longer be stamped.');
+  }
+  const stamped = html.replace(marker, `<time class="masthead-updated" datetime="${newest}">${fmtMonthYear(newest)}</time>`);
+  if (stamped !== html) {
+    writeFileSync(file, stamped);
+    console.log(`Homepage date → ${fmtMonthYear(newest)} (newest post: ${newest})`);
+  }
+};
+
 // --- write everything ---
 rmSync(OUT, { recursive: true, force: true }); // clear stale pages so deleted posts don't linger
 mkdirSync(OUT, { recursive: true });
@@ -233,4 +261,5 @@ for (const p of posts) writeFileSync(join(OUT, `${p.slug}.html`), postPage(p));
 writeFileSync(join(OUT, "index.html"), indexPage());
 writeFileSync(join(ROOT, "feed.xml"), feed());
 writeFileSync(join(ROOT, "sitemap.xml"), sitemap());
+stampHomepage();
 console.log(`Built ${posts.length} post(s) → /writing/ + index + feed.xml + sitemap.xml`);
