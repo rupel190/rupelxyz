@@ -233,7 +233,6 @@ ${urls
 
 // --- homepage "last updated" stamp ---
 // A stale masthead date is worse than none — derive it from the newest post instead of typing it.
-// (A build timestamp would move for a CSS tweak; the newest post's date is the honest signal.)
 // Rewrites one marked element in index.html in place; a missing marker throws rather than skipping.
 const stampHomepage = () => {
   const file = join(ROOT, "index.html");
