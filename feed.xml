@@ -6,6 +6,13 @@
   <atom:link href="https://rupel.xyz/feed.xml" rel="self" type="application/rss+xml"/>
   <description>Essays and notes by Christoph Rippel.</description>
   <item>
+    <title>Claude is human too</title>
+    <link>https://rupel.xyz/writing/organize-claude</link>
+    <guid>https://rupel.xyz/writing/organize-claude</guid>
+    <pubDate>Wed, 26 Aug 2026 12:00:00 GMT</pubDate>
+    <description>AI agents interaction tests</description>
+  </item>
+  <item>
     <title>Expert in a dying field</title>
     <link>https://rupel.xyz/writing/music-gear-obsolescence</link>
     <guid>https://rupel.xyz/writing/music-gear-obsolescence</guid>
