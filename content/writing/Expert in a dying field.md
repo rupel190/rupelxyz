@@ -1,6 +1,6 @@
 ---
 title: Expert in a dying field
-description: What music gear knows about obsolescence
+description: UX secrets of music gear avoiding obsolescence
 categories:
   - "[[Posts]]"
 author:
@@ -13,8 +13,8 @@ tags:
   - obsolescence
 slug: music-gear-obsolescence
 share: true
-modified: 2026-07-18T18:08:11.324+02:00
-edited: 00:41:00
+modified: 2026-07-18T18:12:56.001+02:00
+edited: 00:41:30
 ---
 How does it feel to be an expert in a dying field, asked in the song of the same name by The Beths.
 
