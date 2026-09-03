@@ -1,12 +1,14 @@
 ---
 title: Disco Elysium
+description: Five years to finish and what it taught me about persistence, humour and ZA/UM imploding.
 rating: "6"
 tags:
   - games/reviews
 date: 2026-06-24
-description: Learnings throughout 5 years
 slug: disco-elysium
 share: true
+modified: 2026-06-25T17:47:05.895+02:00
+edited: 00:01:00
 ---
 Disco Elysium. The game that took me longer than any other to finish. 5 years. 
 What now, a lesson on persistence? 
