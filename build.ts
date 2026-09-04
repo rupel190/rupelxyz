@@ -253,7 +253,7 @@ const sitemap = () => {
       console.warn(`! Sitemap: PROJECT_PAGES lists "${slug}" but ${file} is missing — skipping.`);
       return [];
     }
-    return [{ loc: `${SITE}/${slug}`, lastmod: statSync(file).mtime.toISOString().slice(0, 10), changefreq: "monthly", priority: "0.8" }];
+    return [{ loc: `${SITE}/${slug}/`, lastmod: statSync(file).mtime.toISOString().slice(0, 10), changefreq: "monthly", priority: "0.8" }];
   });
   const urls = [
     { loc: `${SITE}/`, lastmod: today, changefreq: "weekly", priority: "1.0" },
