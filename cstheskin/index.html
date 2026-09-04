@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guess the CS2 Skin — a Counter-Strike skin quiz I built</title>
+<meta name="description" content="A browser quiz that shows a CS2 weapon skin in five progressively revealed stages and asks you to name it. SvelteKit on Cloudflare Workers, with a scraped skin database. Free, no account.">
+<meta name="author" content="Christoph Rippel">
+<link rel="canonical" href="https://rupel.xyz/cstheskin">
+<meta property="og:title" content="Guess the CS2 Skin — a Counter-Strike skin quiz I built">
+<meta property="og:description" content="Five progressively revealed images, one guess each round. SvelteKit on Cloudflare Workers, with a scraped skin database.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rupel.xyz/cstheskin">
+<meta property="og:image" content="https://rupel.xyz/assets/cstheskin-og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Guess the CS2 Skin — a Counter-Strike skin quiz I built">
+<meta name="twitter:description" content="Five progressively revealed images, one guess each round. SvelteKit on Cloudflare Workers, with a scraped skin database.">
+<meta name="twitter:image" content="https://rupel.xyz/assets/cstheskin-og.jpg">
+<link rel="alternate" type="application/rss+xml" title="Christoph Rippel — Writing" href="https://rupel.xyz/feed.xml">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/blog.css">
+<style>
+  /* project-page extras — everything else comes from blog.css */
+  .proj-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-top: 14px;
+  }
+  .proj-meta a { color: var(--rust); text-decoration: none; border-bottom: 1px solid var(--warm); }
+  .proj-lede { font-size: 1.15rem; font-style: italic; color: var(--muted); margin-top: 20px; }
+  .shot { margin: 2em 0; }
+  .shot img { width: 100%; height: auto; display: block; border-radius: 3px; border: 1px solid var(--line); }
+  .shot figcaption { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); margin-top: 8px; }
+  .cta {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 12px 22px;
+    background: var(--dark);
+    color: var(--paper);
+    text-decoration: none;
+    border-radius: 3px;
+    margin: 0.6em 0;
+  }
+  .cta:hover { background: var(--rust); }
+</style>
+</head>
+<body>
+<div class="page post">
+  <nav class="topnav"><a href="/">&larr; rupel.xyz</a><a href="/writing/">writing</a></nav>
+  <article>
+    <header class="post-head">
+      <h1>Guess the CS2 Skin</h1>
+      <p class="proj-lede">Like GuessTheGame, but for Counter-Strike weapon finishes.</p>
+      <div class="proj-meta">
+        SvelteKit &middot; Cloudflare Workers &middot; 2025
+        &middot; <a href="https://guess-the-cs2-skin.rupel.xyz">play it</a>
+      </div>
+    </header>
+    <div class="prose">
+
+<p>A CS2 skin is shown zoomed so far in that it's a few pixels of pattern. You guess. Wrong,
+or stuck, and it reveals a little more — five stages, one guess each. Get it early and you've
+genuinely earned it; get it at stage five and you've at least learned a finish you didn't
+know.</p>
+
+<p><a class="cta" href="https://guess-the-cs2-skin.rupel.xyz">Play it →</a></p>
+
+<figure class="shot">
+  <img src="/assets/cstheskin-game.webp" alt="Guess the CS2 Skin in play: a heavily cropped weapon skin above a five-stage selector and a guess box with autocomplete" width="1200" height="900" fetchpriority="high" decoding="async">
+  <figcaption>Stage one — a crop of the finish, five guesses to place it.</figcaption>
+</figure>
+
+<h2>How it's built</h2>
+<p>SvelteKit on Cloudflare Workers. Skins, per-stage image references and player progress
+live in D1; the five crops of each skin live in R2. Round state rides in a cookie, so there's
+no account and nothing to sign up for.</p>
+
+<p>The five stages aren't generated on the fly — each skin is cropped once, offline, by a
+small editor built for the job, and the five results are stored as rows in
+<code>skin_images</code>. Deciding <em>where</em> to crop is a judgement call per skin (the
+interesting few pixels are rarely in the middle), so it's a human step by design rather than
+a failure to automate one.</p>
+
+<h2>The cheating problem</h2>
+<p>Any guessing game where the answer reaches the browser is solvable with devtools, and a
+zoom-reveal game is worse than most: if all five images ship up front, stage five is one
+network tab away.</p>
+<p>So the image endpoint checks progress server-side and refuses. Ask for a stage beyond the
+one you've earned and you get a 403 — not a hidden element, an actual refusal, unless you've
+already solved that skin. The answer isn't sitting in the database in plaintext either;
+<code>skins</code> stores an <code>encrypted_name</code> alongside the display name. Guesses
+are checked on the Worker.</p>
+
+<h2>Getting the names right</h2>
+<p>There's no official CS2 skin API, so the data comes from a scraper that works case by case
+— Dreams &amp; Nightmares, Fracture, Kilowatt and the rest — into per-case JSON. Names turned
+out to be the fiddly part: a finish has a formal name and whatever players actually call it,
+and a quiz that accepts only one of those is infuriating to play. The guess box autocompletes
+against the real list, so you're choosing from what exists rather than fighting a spelling.</p>
+
+    </div>
+  </article>
+  <footer class="post-foot"><a href="/">&larr; back to rupel.xyz</a></footer>
+</div>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Guess the CS2 Skin","url":"https://guess-the-cs2-skin.rupel.xyz/","description":"A browser quiz game: identify Counter-Strike 2 weapon skins from five progressively revealed images.","applicationCategory":"GameApplication","operatingSystem":"Any (web browser)","author":{"@type":"Person","name":"Christoph Rippel","url":"https://rupel.xyz"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"isAccessibleForFree":true}</script>
+</body>
+</html>

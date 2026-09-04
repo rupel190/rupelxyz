@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Singify — SingStar-style Karaoke inside Spotify (Spicetify Extension)</title>
+<meta name="description" content="Karaoke inside Spotify, with no hunting for audio files: UltraStar charts resolve themselves while the song starts. Scrolling lyrics, pitch highway, mic scoring, 1-4 players. Free Spicetify extension.">
+<meta name="author" content="Christoph Rippel">
+<link rel="canonical" href="https://rupel.xyz/singify">
+<meta property="og:title" content="Singify — SingStar-style Karaoke inside Spotify">
+<meta property="og:description" content="A Spicetify extension that overlays UltraStar karaoke on whatever Spotify is playing — lyric scroll, pitch highway, mic scoring, up to four players.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rupel.xyz/singify">
+<meta property="og:image" content="https://rupel.xyz/assets/singify-og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Singify — SingStar-style Karaoke inside Spotify">
+<meta name="twitter:description" content="A Spicetify extension that overlays UltraStar karaoke on whatever Spotify is playing — lyric scroll, pitch highway, mic scoring, up to four players.">
+<meta name="twitter:image" content="https://rupel.xyz/assets/singify-og.jpg">
+<link rel="alternate" type="application/rss+xml" title="Christoph Rippel — Writing" href="https://rupel.xyz/feed.xml">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/blog.css">
+<style>
+  /* project-page extras — everything else comes from blog.css */
+  .proj-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-top: 14px;
+  }
+  .proj-meta a { color: var(--rust); text-decoration: none; border-bottom: 1px solid var(--warm); }
+  .proj-lede { font-size: 1.15rem; font-style: italic; color: var(--muted); margin-top: 20px; }
+  .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 2em 0; }
+  .shots figure { margin: 0; }
+  .shots img { width: 100%; height: auto; display: block; border-radius: 3px; border: 1px solid var(--line); }
+  .shots figcaption { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+  @media (max-width: 600px) { .shots { grid-template-columns: 1fr; } }
+  .notice {
+    border-left: 3px solid var(--rust);
+    background: rgba(139, 58, 30, 0.06);
+    padding: 16px 20px;
+    margin: 2em 0;
+    font-size: 0.94rem;
+  }
+  .notice p + p { margin-top: 0.7em; }
+  .notice strong { color: var(--rust); }
+  .notice .notice-label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--rust);
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="page post">
+  <nav class="topnav"><a href="/">&larr; rupel.xyz</a><a href="/writing/">writing</a></nav>
+  <article>
+    <header class="post-head">
+      <h1>Singify</h1>
+      <p class="proj-lede">SingStar, but the song library is Spotify.</p>
+      <div class="proj-meta">
+        Spicetify extension &middot; Bun + TypeScript &middot; Linux
+        &middot; <a href="https://github.com/rupel190/singify">source on GitHub</a>
+      </div>
+    </header>
+    <div class="prose">
+
+<p>Singify is a free, open-source <strong>Spicetify extension that turns Spotify into a karaoke
+machine</strong>. When a song starts playing it finds the matching UltraStar chart, downloads it, and
+drops a fullscreen overlay on top of the Spotify client: lyrics scrolling with a per-syllable wipe,
+a pitch highway showing the note you're supposed to be hitting, and a live score off your
+microphone. Solo, or one to four players head-to-head with a mic each.</p>
+
+<div class="notice">
+  <span class="notice-label">Before you install</span>
+  <p><strong>It needs a helper process running.</strong> Spotify's renderer has no filesystem of
+  its own, so chart download and the song cache live in a small local server you start yourself
+  (<code>bun run helper</code>). Without it there is nothing to sing — not even a song you've
+  already cached. The Spicetify Marketplace can only install the overlay, not the helper.</p>
+  <p><strong>Built and tested on Linux only.</strong> Nothing in it is deliberately Linux-bound —
+  Bun and Spicetify both run on macOS and Windows — but it has never been run there, config lands
+  in XDG paths rather than the platform-native ones, and the documented deploy route is
+  <code>spicetify-nix</code> on NixOS.</p>
+</div>
+
+<div class="shots">
+  <figure>
+    <img src="/assets/singify-stage-solo.webp" alt="Singify solo karaoke stage inside Spotify: a pitch highway with golden notes, live score, and lyrics highlighting syllable by syllable" width="1400" height="788" fetchpriority="high" decoding="async">
+    <figcaption>Solo stage — pitch highway, live score, per-syllable lyric wipe, golden notes.</figcaption>
+  </figure>
+  <figure>
+    <img src="/assets/singify-stage-versus.webp" alt="Singify versus mode: two players singing the same song on separate coloured pitch lanes with independent scores" width="1400" height="788" loading="lazy" decoding="async">
+    <figcaption>Versus — one coloured lane per player, separate score and mic.</figcaption>
+  </figure>
+  <figure>
+    <img src="/assets/singify-session-setup.webp" alt="Singify session setup screen: player roster, Spotify playlist picker, difficulty and round count" width="1400" height="1109" loading="lazy" decoding="async">
+    <figcaption>Session setup — roster, playlist, difficulty, round count.</figcaption>
+  </figure>
+  <figure>
+    <img src="/assets/singify-result.webp" alt="Singify results screen showing the winner, star tiers and a per-song score breakdown" width="1400" height="847" loading="lazy" decoding="async">
+    <figcaption>Results — winner, star tiers, per-song breakdown.</figcaption>
+  </figure>
+</div>
+
+<h2>What it does</h2>
+<ul>
+  <li><strong>Automatic charts.</strong> Songs are matched against <a href="https://usdb.animux.de/">USDB</a> and the UltraStar <code>.txt</code> is fetched and cached on first play — no manual hunting for files.</li>
+  <li><strong>Pitch scoring off your mic.</strong> Octave-agnostic, so it doesn't punish you for singing an octave down. Beat-weighted 9000 points plus a 1000-point line bonus, golden notes worth double, matching UltraStar's scoring rules.</li>
+  <li><strong>One to four players.</strong> Each gets a coloured lane, their own microphone device, gain and noise gate, and their own running score.</li>
+  <li><strong>Sessions.</strong> Pick a Spotify playlist, a difficulty (±2 / ±1 / ±0 semitones) and a round count; it runs the rounds and produces an aggregate result screen.</li>
+  <li><strong>Competitive mode.</strong> One microphone, same song, take turns — for when you only own one mic.</li>
+  <li><strong>Per-song sync offset.</strong> Nudge the chart against the audio and it remembers it for that track.</li>
+</ul>
+
+<h2>The problem it actually solves</h2>
+<p>The existing karaoke engines are good. USDX, Vocaluxe, Performous, UltraStar Play, allkaraoke —
+and <a href="https://usdb.animux.de/">USDB</a>, the community chart database all of them lean on, is
+the reason any of this is possible. They solved singing a long time ago.</p>
+<p>What none of them solved is <strong>getting to the singing</strong>. Every one needs a chart
+<em>and</em> the matching audio file, at the matching length, for every song anybody might want.
+Someone names a song at a party and you're in a file manager.</p>
+<p>Singify skips that step. The audio is whatever Spotify is already playing, so the library is
+Spotify's entire catalogue; the chart resolves itself in the background while the song starts. You
+name a song, it's on.</p>
+
+<h2>Why it isn't a fork of one of them</h2>
+<p>Those engines <em>own the audio</em> — each decodes the file itself, so it knows exactly where the
+playhead is and can analyse the backing track. Spotify never hands out decoded PCM; that's what the
+DRM is for.</p>
+<p>So Singify rides only what Spotify <em>does</em> expose: the playback clock and your microphone. The
+chart is overlaid on whatever is already playing, and the clock is interpolated from Spotify's own
+player events. That constraint is the whole design — and it's also what makes the library problem
+disappear.</p>
+
+<h2>How it's built</h2>
+<p>The karaoke rendering is developed in a <strong>plain browser harness</strong> with instant reload,
+and the identical component then runs unchanged inside Spotify. That works because of a small
+ports-and-adapters split: a shared core that takes the playback position as a prop and has no idea
+which world it's in, and two host adapters that fill the holes — one faking the Spicetify global with
+a synthetic transport clock, one using Spotify's injected React and its real player events. Add a
+feature once and both hosts get it. Every screenshot above was captured from the browser harness.</p>
+<p>A small localhost helper (Bun) handles the parts a browser renderer can't: the USDB login, the
+chart download, and the on-disk cache. Spotify's content-security policy does permit the renderer to
+<code>fetch</code> <code>127.0.0.1</code>, so no CSP patching is required.</p>
+<p>The pitch highway is DOM and CSS transforms rather than canvas — a single GPU-composited
+<code>translateX</code> moves the whole note track. On the RDNA4 GPU this was built on, that's both the
+cheaper and the less crash-prone path.</p>
+
+<h2>What you need</h2>
+<ul>
+  <li>Spotify with <a href="https://spicetify.app/">Spicetify</a></li>
+  <li><a href="https://bun.sh/">Bun</a>, to build the extension and run the helper</li>
+  <li>A microphone (one per player, if you want versus mode)</li>
+  <li>A free <a href="https://usdb.animux.de/">USDB</a> account for automatic chart download</li>
+</ul>
+<p>Built and run on Linux (NixOS, deployed declaratively through <code>spicetify-nix</code>).
+Install instructions and the current module-by-module status are in the
+<a href="https://github.com/rupel190/singify">README on GitHub</a>.</p>
+
+<h2>Status</h2>
+<p>It runs live in a real Spotify client. Microphone scoring, the lyric scroll, USDB auto-resolve,
+multi-round sessions and the localhost helper all work end to end. The parser, USDB client, cache,
+resolver and scoring are covered by tests.</p>
+
+    </div>
+  </article>
+  <footer class="post-foot"><a href="/">&larr; back to rupel.xyz</a></footer>
+</div>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Singify","alternateName":"Spicetify Karaoke","description":"A Spicetify extension that turns Spotify into a karaoke machine: UltraStar charts fetched automatically, scrolling lyrics with a pitch highway, microphone scoring, and one to four player versus rounds.","url":"https://rupel.xyz/singify","codeRepository":"https://github.com/rupel190/singify","applicationCategory":"MultimediaApplication","applicationSubCategory":"Karaoke","operatingSystem":"Linux","programmingLanguage":"TypeScript","screenshot":"https://rupel.xyz/assets/singify-og.jpg","author":{"@type":"Person","name":"Christoph Rippel","url":"https://rupel.xyz"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"isAccessibleForFree":true}</script>
+</body>
+</html>

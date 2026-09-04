@@ -15,7 +15,7 @@
 import MarkdownIt from "markdown-it";
 import footnote from "markdown-it-footnote";
 import matter from "gray-matter";
-import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, statSync } from "node:fs";
 import { join, basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -60,13 +60,36 @@ const loaded = readdirSync(SRC)
   .filter((f) => f.endsWith(".md"))
   .map((f) => {
     const { data, content } = matter(readFileSync(join(SRC, f), "utf8"));
-    return { slug: (data.slug as string) || basename(f, ".md"), data, content };
+    return { slug: (data.slug as string) || basename(f, ".md"), file: f, data, content };
   })
   .filter((p) => !p.data.draft)
   // Sort newest-first on a normalized ISO key. NB: js-yaml parses unquoted `date:`/`created:`
   // into Date objects, and String(Date) is "Wed Jun 24 2026 …" — which localeCompare would sort
   // by weekday name, not chronologically. toISODate() collapses both to "YYYY-MM-DD" first.
   .sort((a, b) => toISODate(b.data.date ?? b.data.created).localeCompare(toISODate(a.data.date ?? a.data.created)));
+
+// --- slug collisions ---
+// Renaming a note in Obsidian creates a new file; the old one keeps its `slug:` and its
+// `share: true` unless you delete it. Two files then claim one URL: both get listed on the
+// index and in the feed, both land in the sitemap, and whichever readdir() happens to return
+// last silently overwrites the page — which is how a stale title survives a rename. Refuse to
+// build instead, and name both files so the fix is obvious.
+const bySlug = new Map<string, string[]>();
+for (const p of loaded) {
+  const list = bySlug.get(p.slug) ?? [];
+  list.push(p.file);
+  bySlug.set(p.slug, list);
+}
+const collisions = [...bySlug].filter(([, files]) => files.length > 1);
+if (collisions.length) {
+  const detail = collisions
+    .map(([slug, files]) => `  slug "${slug}" claimed by:\n${files.map((f) => `    - content/writing/${f}`).join("\n")}`)
+    .join("\n");
+  throw new Error(
+    `Duplicate slugs — each would overwrite the other's page:\n${detail}\n` +
+      `Delete the stale note in Obsidian, or set 'draft: true' / change its 'slug:'.`
+  );
+}
 
 // --- [[wikilinks]] → links to published posts, else plain text ---
 const lookup = new Map<string, string>();
@@ -209,12 +232,27 @@ ${items}
 // --- sitemap ---
 // Hand-maintained sitemaps rot: they list the homepage and forget every post.
 // Generate it here so it always covers home + the writing index + every published post.
+//
+// Hand-written project pages (singify/index.html etc.) aren't generated from content/, so they'd
+// be invisible to the sitemap otherwise. List them here; `lastmod` comes from the file's mtime so
+// it stays honest without anyone having to remember to bump a date.
+const PROJECT_PAGES = ["singify", "cstheskin"];
+
 const sitemap = () => {
   const today = new Date().toISOString().slice(0, 10);
   const newest = posts[0]?.date || today; // posts are sorted newest-first
+  const projects = PROJECT_PAGES.flatMap((slug) => {
+    const file = join(ROOT, slug, "index.html");
+    if (!existsSync(file)) {
+      console.warn(`! Sitemap: PROJECT_PAGES lists "${slug}" but ${file} is missing — skipping.`);
+      return [];
+    }
+    return [{ loc: `${SITE}/${slug}`, lastmod: statSync(file).mtime.toISOString().slice(0, 10), changefreq: "monthly", priority: "0.8" }];
+  });
   const urls = [
     { loc: `${SITE}/`, lastmod: today, changefreq: "weekly", priority: "1.0" },
     { loc: `${SITE}/writing/`, lastmod: newest, changefreq: "weekly", priority: "0.8" },
+    ...projects,
     ...posts.map((p) => ({ loc: `${SITE}/writing/${p.slug}`, lastmod: p.date || today, changefreq: "monthly", priority: "0.6" })),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>

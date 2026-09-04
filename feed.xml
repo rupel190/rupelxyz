@@ -6,11 +6,11 @@
   <atom:link href="https://rupel.xyz/feed.xml" rel="self" type="application/rss+xml"/>
   <description>Essays and notes by Christoph Rippel.</description>
   <item>
-    <title>Claude is human too</title>
+    <title>Claude is human too - how to organize CLAUDE.md so agents remember</title>
     <link>https://rupel.xyz/writing/organize-claude</link>
     <guid>https://rupel.xyz/writing/organize-claude</guid>
     <pubDate>Wed, 26 Aug 2026 12:00:00 GMT</pubDate>
-    <description>AI agents interaction tests</description>
+    <description>Agents forget. What to cut, what to split out, and how to test whether an agent actually recalls it.</description>
   </item>
   <item>
     <title>Expert in a dying field</title>
@@ -45,7 +45,7 @@
     <link>https://rupel.xyz/writing/disco-elysium</link>
     <guid>https://rupel.xyz/writing/disco-elysium</guid>
     <pubDate>Wed, 24 Jun 2026 12:00:00 GMT</pubDate>
-    <description>Learnings throughout 5 years</description>
+    <description>Five years to finish and what it taught me about persistence, humour and ZA/UM imploding.</description>
   </item>
 </channel>
 </rss>
