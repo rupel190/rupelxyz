@@ -5,5 +5,8 @@ Allow: /
 # endpoints with nothing to index, and a robots.txt under a subpath is never fetched — so
 # the rules for them have to live here, at the root.
 Disallow: /guesstheskin/api/
+# Per-visitor page with nothing to land on. Its noindex tag lives in a <svelte:head> that
+# only renders after hydration, so a crawler reading the static shell would never see it.
+Disallow: /guesstheskin/history
 
 Sitemap: https://rupel.xyz/sitemap.xml
