@@ -66,45 +66,33 @@
     </header>
     <div class="prose">
 
-<p>A CS2 skin is shown zoomed so far in that it's a few pixels of pattern. You guess. Wrong,
-or stuck, and it reveals a little more — five stages, one guess each. Get it early and you've
-genuinely earned it; get it at stage five and you've at least learned a finish you didn't
-know.</p>
+<p>A cropped CS2 skin is shown and you have to guess its name. If you fail it reveals another
+crop. In the last stage you'll see the whole skin. Put in the weapon type first for better
+suggestions.</p>
 
-<p><a class="cta" href="https://guess-the-cs2-skin.rupel.xyz">Play it →</a></p>
+<p><a class="cta" href="https://guess-the-cs2-skin.rupel.xyz">Play it &rarr;</a></p>
 
 <figure class="shot">
   <img src="/assets/cstheskin-game.webp" alt="Guess the CS2 Skin in play: a heavily cropped weapon skin above a five-stage selector and a guess box with autocomplete" width="1200" height="900" fetchpriority="high" decoding="async">
-  <figcaption>Stage one — a crop of the finish, five guesses to place it.</figcaption>
+  <figcaption>Stage one — a crop of the finish, five stages to place it.</figcaption>
 </figure>
 
 <h2>How it's built</h2>
-<p>SvelteKit on Cloudflare Workers. Skins, per-stage image references and player progress
-live in D1; the five crops of each skin live in R2. Round state rides in a cookie, so there's
-no account and nothing to sign up for.</p>
-
-<p>The five stages aren't generated on the fly — each skin is cropped once, offline, by a
-small editor built for the job, and the five results are stored as rows in
-<code>skin_images</code>. Deciding <em>where</em> to crop is a judgement call per skin (the
-interesting few pixels are rarely in the middle), so it's a human step by design rather than
-a failure to automate one.</p>
+<p>SvelteKit on Cloudflare Workers; skins, per-stage image references and player progress in
+D1, the five crops in R2, round state in a cookie so there's no account. Stages aren't
+generated on the fly — each skin is cropped once offline by a small editor built for the job.
+Deciding where to crop is a judgement call per skin, currently done per weapon type.</p>
 
 <h2>The cheating problem</h2>
-<p>Any guessing game where the answer reaches the browser is solvable with devtools, and a
-zoom-reveal game is worse than most: if all five images ship up front, stage five is one
-network tab away.</p>
-<p>So the image endpoint checks progress server-side and refuses. Ask for a stage beyond the
-one you've earned and you get a 403 — not a hidden element, an actual refusal, unless you've
-already solved that skin. The answer isn't sitting in the database in plaintext either;
-<code>skins</code> stores an <code>encrypted_name</code> alongside the display name. Guesses
-are checked on the Worker.</p>
+<p>Any guessing game where the answer reaches the browser is solvable with devtools, and if
+all five images ship up front stage five is one network tab away. So the image endpoint checks
+progress server-side and returns a 403 for an unearned stage, and <code>skins</code> stores an
+<code>encrypted_name</code> alongside the display name. Time will tell if it's better than
+VAC.</p>
 
 <h2>Getting the names right</h2>
-<p>There's no official CS2 skin API, so the data comes from a scraper that works case by case
-— Dreams &amp; Nightmares, Fracture, Kilowatt and the rest — into per-case JSON. Names turned
-out to be the fiddly part: a finish has a formal name and whatever players actually call it,
-and a quiz that accepts only one of those is infuriating to play. The guess box autocompletes
-against the real list, so you're choosing from what exists rather than fighting a spelling.</p>
+<p>No official CS2 API, so a scraper works case by case — Dreams &amp; Nightmares, Fracture,
+Kilowatt — into per-case JSON.</p>
 
     </div>
   </article>
