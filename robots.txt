@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
+# Apps served under rupel.xyz paths by their own workers. Their API routes are machine
+# endpoints with nothing to index, and a robots.txt under a subpath is never fetched — so
+# the rules for them have to live here, at the root.
+Disallow: /guesstheskin/api/
+
 Sitemap: https://rupel.xyz/sitemap.xml

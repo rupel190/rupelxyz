@@ -238,6 +238,12 @@ ${items}
 // it stays honest without anyone having to remember to bump a date.
 const PROJECT_PAGES = ["singify", "cstheskin"];
 
+// Apps served under rupel.xyz paths by their own Cloudflare workers (song-analyzer,
+// cstheskin). No file exists here for them, but they're rupel.xyz URLs, so this sitemap is
+// the only one that can list them — a sitemap under a subpath isn't fetched, and neither is
+// a robots.txt. Both live at the root now; see robots.txt for the matching /api/ disallow.
+const APP_PAGES = ["songmap/", "guesstheskin/"];
+
 const sitemap = () => {
   const today = new Date().toISOString().slice(0, 10);
   const newest = posts[0]?.date || today; // posts are sorted newest-first
@@ -253,6 +259,7 @@ const sitemap = () => {
     { loc: `${SITE}/`, lastmod: today, changefreq: "weekly", priority: "1.0" },
     { loc: `${SITE}/writing/`, lastmod: newest, changefreq: "weekly", priority: "0.8" },
     ...projects,
+    ...APP_PAGES.map((path) => ({ loc: `${SITE}/${path}`, lastmod: today, changefreq: "monthly", priority: "0.8" })),
     ...posts.map((p) => ({ loc: `${SITE}/writing/${p.slug}`, lastmod: p.date || today, changefreq: "monthly", priority: "0.6" })),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
