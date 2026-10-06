@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1880 806" width="1880" height="806" role="img" aria-label="drovr terminal session">
+  <defs>
+    <clipPath id="window">
+      <rect x="20" y="20" width="1840" height="766" rx="26"/>
+    </clipPath>
+  </defs>
+
+  <rect x="20" y="20" width="1840" height="766" rx="26" fill="#2a2018"/>
+  <g clip-path="url(#window)">
+    <rect x="20" y="20" width="1840" height="76" fill="#1a1410"/>
+  </g>
+  <rect x="20" y="20" width="1840" height="766" rx="26" fill="none" stroke="#d4ccc0" stroke-opacity="0.18" stroke-width="2"/>
+
+  <circle cx="66" cy="58" r="13" fill="#c8794a"/>
+  <circle cx="108" cy="58" r="13" fill="#c9a84c"/>
+  <circle cx="150" cy="58" r="13" fill="#7a6e62"/>
+  <text x="940" y="68" text-anchor="middle" fill="#7a6e62" font-family="ui-monospace, 'SF Mono', 'Cascadia Code', 'Menlo', 'Consolas', 'Liberation Mono', monospace" font-size="30">drovr — worker session</text>
+
+  <g font-family="ui-monospace, 'SF Mono', 'Cascadia Code', 'Menlo', 'Consolas', 'Liberation Mono', monospace" font-size="38" font-weight="400">
+    <text x="80" y="170">
+      <tspan fill="#c9a84c">$ </tspan>
+      <tspan x="126" fill="#f0ebe2">drovr run tests --edit "add tests for the parser"</tspan>
+    </text>
+    <text x="80" y="226" xml:space="preserve"><tspan fill="#c8794a">drovr:</tspan><tspan fill="#cfc6ba"> tests started on deepseek</tspan></text>
+    <text x="80" y="298">
+      <tspan fill="#c9a84c">$ </tspan>
+      <tspan x="126" fill="#f0ebe2">drovr list</tspan>
+    </text>
+    <text x="80" y="354">
+      <tspan fill="#f0ebe2">refactor</tspan>
+      <tspan x="354" fill="#c8794a">running</tspan>
+      <tspan x="582" fill="#cfc6ba">deepseek</tspan>
+      <tspan x="810" fill="#c9a84c">$0.0021</tspan>
+      <tspan x="1038" fill="#cfc6ba">turn 4</tspan>
+      <tspan x="1266" fill="#f0ebe2">Edit src/parse.py</tspan>
+    </text>
+    <text x="80" y="410">
+      <tspan fill="#f0ebe2">tests</tspan>
+      <tspan x="354" fill="#c9a84c">done</tspan>
+      <tspan x="582" fill="#cfc6ba">deepseek</tspan>
+      <tspan x="810" fill="#c9a84c">$0.0064</tspan>
+      <tspan x="1038" fill="#cfc6ba">turn 7</tspan>
+    </text>
+    <text x="80" y="466">
+      <tspan fill="#f0ebe2">docs</tspan>
+      <tspan x="354" fill="#c9a84c">done</tspan>
+      <tspan x="582" fill="#cfc6ba">deepseek</tspan>
+      <tspan x="810" fill="#c9a84c">$0.0013</tspan>
+      <tspan x="1038" fill="#cfc6ba">turn 3</tspan>
+    </text>
+    <text x="80" y="538">
+      <tspan fill="#c9a84c">$ </tspan>
+      <tspan x="126" fill="#f0ebe2">drovr status</tspan>
+    </text>
+    <text x="80" y="594" xml:space="preserve"><tspan fill="#f0ebe2">1</tspan><tspan fill="#c8794a">▶</tspan><tspan fill="#f0ebe2"> 2</tspan><tspan fill="#c9a84c">✓</tspan></text>
+  </g>
+</svg>
