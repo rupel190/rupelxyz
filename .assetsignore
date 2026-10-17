@@ -10,3 +10,6 @@ wrangler.jsonc
 .nvmrc
 .assetsignore
 .gitignore
+# Never serve version control or local agent settings (rupel.xyz/.git/ was public until 2026-10-17).
+.git
+.claude
