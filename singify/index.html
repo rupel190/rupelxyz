@@ -78,10 +78,12 @@ microphone. Solo, or one to four players head-to-head with a mic each.</p>
 
 <div class="notice">
   <span class="notice-label">Before you install</span>
-  <p><strong>It needs a helper process running.</strong> Spotify's renderer has no filesystem of
-  its own, so chart download and the song cache live in a small local server you start yourself
-  (<code>bun run helper</code>). Without it there is nothing to sing — not even a song you've
-  already cached. The Spicetify Marketplace can only install the overlay, not the helper.</p>
+  <p><strong>Charts by hand, or automatically with the helper.</strong> On its own, the extension
+  sings any UltraStar <code>.txt</code> you load for a song (free from
+  <a href="https://usdb.animux.de/">USDB</a>) — it's remembered for that track and synced to
+  Spotify automatically. Automatic chart download and the song cache need a small local server
+  you start yourself (<code>bun run helper</code>); the Spicetify Marketplace installs the
+  extension, not the helper.</p>
   <p><strong>Built and tested on Linux only.</strong> Nothing in it is deliberately Linux-bound —
   Bun and Spicetify both run on macOS and Windows — but it has never been run there, config lands
   in XDG paths rather than the platform-native ones, and the documented deploy route is
