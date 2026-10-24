@@ -30,7 +30,7 @@ body::before {
 
 .topnav {
   display: flex;
-  gap: 24px;
+  gap: 32px;
   font-family: 'DM Mono', monospace;
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -39,6 +39,9 @@ body::before {
 }
 .topnav a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); }
 .topnav a:hover { color: var(--warm); border-color: var(--warm); }
+/* "← rupel.xyz" is the way home, the rest is the section menu: push them apart so the row
+   doesn't read as a breadcrumb trail */
+.topnav a:first-child { margin-right: auto; }
 /* the section you're in */
 .topnav a[aria-current] { color: var(--ink); border-color: var(--ink); }
 
