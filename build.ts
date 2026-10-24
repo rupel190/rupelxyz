@@ -18,6 +18,7 @@ import matter from "gray-matter";
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, statSync } from "node:fs";
 import { join, basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 
 // Works under both Node and Bun (Bun also has import.meta.dir, but this is portable).
 const ROOT = dirname(fileURLToPath(import.meta.url));
@@ -292,13 +293,27 @@ ${urls
 };
 
 // --- homepage "last updated" stamp ---
-// A stale masthead date is worse than none — derive it from the newest post instead of typing it.
-// Rewrites one marked element in index.html in place; a missing marker throws rather than skipping.
+// A stale masthead date is worse than none, and so is a typed one. It's the date of the commit
+// being built: every change to the site is a commit (posts arrive as Enveloppe's merges), and
+// Cloudflare runs this build on every deploy, so the live date moves with the site. Outside a git
+// checkout it falls back to the newest post. Rewrites one marked element in index.html in place;
+// a missing marker throws rather than skipping.
+const lastCommitDate = (): string | undefined => {
+  try {
+    return execFileSync("git", ["log", "-1", "--format=%cs"], { cwd: ROOT, stdio: ["ignore", "pipe", "ignore"] })
+      .toString()
+      .trim() || undefined;
+  } catch {
+    return undefined;
+  }
+};
+
 const stampHomepage = () => {
   const file = join(ROOT, "index.html");
-  const newest = posts[0]?.date; // posts are sorted newest-first
+  const commit = lastCommitDate();
+  const newest = commit ?? posts[0]?.date; // posts are sorted newest-first
   if (!newest) {
-    console.warn("! No published posts — leaving the homepage date alone.");
+    console.warn("! No git history and no published posts — leaving the homepage date alone.");
     return;
   }
   const html = readFileSync(file, "utf8");
@@ -309,7 +324,7 @@ const stampHomepage = () => {
   const stamped = html.replace(marker, `<time class="masthead-updated" datetime="${newest}">${fmtMonthYear(newest)}</time>`);
   if (stamped !== html) {
     writeFileSync(file, stamped);
-    console.log(`Homepage date → ${fmtMonthYear(newest)} (newest post: ${newest})`);
+    console.log(`Homepage date → ${fmtMonthYear(newest)} (${commit ? "last commit" : "newest post"}: ${newest})`);
   }
 };
 

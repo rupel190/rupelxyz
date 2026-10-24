@@ -111,6 +111,15 @@
     text-transform: uppercase;
   }
 
+  /* three groups: where and when, how to reach me, the rest of the site */
+  .masthead-meta p {
+    margin: 0;
+  }
+
+  .masthead-meta p + p {
+    margin-top: 0.6em;
+  }
+
   .masthead-meta a {
     color: var(--muted);
     text-decoration: none;
@@ -440,14 +449,20 @@
       <div class="masthead-sub">Living Portfolio</div>
     </div>
     <div class="masthead-meta">
-      Vienna, Austria<br>
-      <a href="mailto:christoph@rippel.cc">christoph@rippel.cc</a><br>
-      <a href="https://github.com/rupel190">github.com/rupel190</a><br>
-      <a href="https://www.linkedin.com/in/christoph-rippel-964508171/">linkedin</a><br>
-      <a href="/writing/">writing</a><br>
-      <a href="/music/">music</a><br>
-      <!-- stamped by build.ts from the newest post — do not edit by hand -->
-      <time class="masthead-updated" datetime="2026-08-26">August 2026</time>
+      <p>
+        Vienna, Austria<br>
+        <!-- stamped by build.ts from the last commit — do not edit by hand -->
+        <time class="masthead-updated" datetime="2026-10-24">October 2026</time>
+      </p>
+      <p>
+        <a href="mailto:christoph@rippel.cc">christoph@rippel.cc</a><br>
+        <a href="https://github.com/rupel190">github.com/rupel190</a><br>
+        <a href="https://www.linkedin.com/in/christoph-rippel-964508171/">linkedin</a>
+      </p>
+      <p>
+        <a href="/writing/">writing</a><br>
+        <a href="/music/">music</a>
+      </p>
     </div>
   </header>
 
