@@ -236,13 +236,21 @@ ${items}
 // Hand-written project pages (singify/index.html etc.) aren't generated from content/, so they'd
 // be invisible to the sitemap otherwise. List them here; `lastmod` comes from the file's mtime so
 // it stays honest without anyone having to remember to bump a date.
-const PROJECT_PAGES = ["singify", "cstheskin"];
+const PROJECT_PAGES = ["cstheskin"];
 
-// Apps served under rupel.xyz paths by their own Cloudflare workers (song-analyzer,
-// cstheskin). No file exists here for them, but they're rupel.xyz URLs, so this sitemap is
-// the only one that can list them — a sitemap under a subpath isn't fetched, and neither is
-// a robots.txt. Both live at the root now; see robots.txt for the matching /api/ disallow.
-const APP_PAGES = ["songmap/", "guesstheskin/"];
+// Pages served under rupel.xyz paths by their own Cloudflare workers: the game (cstheskin
+// repo) and everything under /music/ (music repo). No file exists here for them, but they're
+// rupel.xyz URLs, so this sitemap is the only one that can list them — a sitemap under a
+// subpath isn't fetched, and neither is a robots.txt. Both live at the root; see robots.txt
+// for the matching /api/ disallow.
+const APP_PAGES = [
+  "guesstheskin/",
+  "music/",
+  "music/modes/",
+  "music/songmap/",
+  "music/tubs/",
+  "music/singify/",
+];
 
 const sitemap = () => {
   const today = new Date().toISOString().slice(0, 10);

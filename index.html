@@ -193,6 +193,16 @@
     border-top: 1px solid var(--line);
   }
 
+  .section-sub a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.55);
+  }
+
+  .section-sub a:hover {
+    border-color: var(--gold);
+  }
+
   .section-sub:first-of-type {
     margin-top: 0;
     padding-top: 0;
@@ -290,6 +300,11 @@
     margin-top: 3px;
     font-style: italic;
     line-height: 1.4;
+  }
+
+  /* emphasis inside the italic caption reads upright */
+  .portfolio-caption .desc em {
+    font-style: normal;
   }
 
   /* TIMELINE */
@@ -501,19 +516,38 @@
           <span class="desc">Like GuessTheGame, but for CS2 weapon skins. Play at rupel.xyz/guesstheskin. Cloudflare Workers. 2025.</span>
         </div>
       </div>
+    </div>
+    <h3 class="section-sub"><a href="/music/">Music</a></h3>
+    <div class="portfolio-grid">
+      <div class="portfolio-item wide">
+        <img src="assets/tubs-renderer.webp" alt="TUBS Renderer — a tubs text block above the drum grid it renders, with a play button and tempo" loading="lazy" decoding="async" width="1880" height="806">
+        <div class="portfolio-caption">
+          <span class="cat">Obsidian Plugin / Music Tech</span>
+          <h4 class="title"><a href="https://github.com/rupel190/tubs-renderer" target="_blank" rel="noopener">TUBS Renderer</a></h4>
+          <span class="desc">Guitar TABS for drums. TUBS is an existing concept. The plugin enables you to render it nicely and <em>play</em> your patterns inside Obsidian. 2026.</span>
+        </div>
+      </div>
       <div class="portfolio-item">
-        <img src="assets/songmap.webp" alt="Songmap — song structure &amp; arrangement analyzer" loading="lazy" decoding="async" width="900" height="977">
+        <img src="assets/mode-lab.webp" alt="Fretboard Mode Lab — E Dorian across fifteen frets, color notes ringed in gold, with key, mode and pattern pickers above" loading="lazy" decoding="async" width="1200" height="900">
         <div class="portfolio-caption">
           <span class="cat">Web / Music Tech</span>
-          <h4 class="title"><a href="/songmap/">Songmap</a></h4>
-          <span class="desc">Client-side song structure &amp; arrangement analyzer. Svelte 5 + Vite. Live at rupel.xyz/songmap. Cloudflare Workers. 2025.</span>
+          <h4 class="title"><a href="/music/modes/">Fretboard Mode Lab</a></h4>
+          <span class="desc">Guitar modes are kinda intimidating, so I created a tool to help understand them. 2026.</span>
+        </div>
+      </div>
+      <div class="portfolio-item">
+        <img src="assets/songmap.webp" alt="Songmap — a waveform with colour-coded section markers above instrument lanes on a dark board" loading="lazy" decoding="async" width="900" height="675">
+        <div class="portfolio-caption">
+          <span class="cat">Web / Music Tech</span>
+          <h4 class="title"><a href="/music/songmap/">Songmap</a></h4>
+          <span class="desc">Client-side song structure &amp; arrangement analyzer. Svelte 5 + Vite. Live at rupel.xyz/music/songmap. Cloudflare Workers. 2025.</span>
         </div>
       </div>
       <div class="portfolio-item">
         <img src="assets/singify.webp" alt="Singify — two-player UltraStar karaoke overlaid on Spotify, pitch lanes and scrolling lyrics" loading="lazy" decoding="async" width="1200" height="900">
         <div class="portfolio-caption">
           <span class="cat">Software / Music Tech</span>
-          <h4 class="title"><a href="/singify/">Singify</a></h4>
+          <h4 class="title"><a href="/music/singify/">Singify</a></h4>
           <span class="desc">SingStar (karaoke) but for Spotify. Auto-downloads charts from USDB with the included helper. Live lanes, per-player mics, playlist-driven rounds, octave-agnostic pitch scoring, chart sync and a graded result screen — all you need is Bun and friends! 2026.</span>
         </div>
       </div>
