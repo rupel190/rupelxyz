@@ -139,6 +139,13 @@ ${FONTS}
 <link rel="stylesheet" href="/assets/blog.css">
 </head>`;
 
+// --- site nav ---
+// The same nav on every inner page of rupel.xyz, in this order. The rupelxyz-music repo builds
+// the identical markup for its pages (vite.config.ts), so change both together. aria-current
+// marks the section you're in: "page" on the section's own index, "true" on pages inside it.
+const nav = (writing?: "page" | "true") =>
+  `<nav class="topnav"><a href="/">&larr; rupel.xyz</a><a href="/writing/"${writing ? ` aria-current="${writing}"` : ""}>writing</a><a href="/music/">music</a></nav>`;
+
 // --- post page ---
 const postPage = (p: Post) => {
   const url = `${SITE}/writing/${p.slug}`;
@@ -156,7 +163,7 @@ const postPage = (p: Post) => {
   return `${head({ title: `${p.title} · ${AUTHOR}`, desc: p.description || p.title, url, type: "article", published: p.date })}
 <body>
 <div class="page post">
-  <nav class="topnav"><a href="/">&larr; rupel.xyz</a><a href="/writing/">writing</a></nav>
+  ${nav("true")}
   <article>
     <header class="post-head">
       <h1>${esc(p.title)}</h1>
@@ -166,7 +173,7 @@ const postPage = (p: Post) => {
 ${p.html}
     </div>
   </article>
-  <footer class="post-foot"><a href="/writing/">&larr; more writing</a></footer>
+  <footer class="post-foot"><a href="/writing/">&larr; all writing</a></footer>
 </div>
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 </body>
@@ -189,7 +196,7 @@ const indexPage = () => {
   return `${head({ title: `Writing · ${AUTHOR}`, desc: "Essays and notes by Christoph Rippel.", url: `${SITE}/writing/` })}
 <body>
 <div class="page">
-  <nav class="topnav"><a href="/">&larr; rupel.xyz</a></nav>
+  ${nav("page")}
   <header class="writing-head">
     <h1>Writing</h1>
     <p class="writing-sub">Things I saw that were new and exciting. <a href="/feed.xml">RSS</a></p>

@@ -39,6 +39,8 @@ body::before {
 }
 .topnav a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--line); }
 .topnav a:hover { color: var(--warm); border-color: var(--warm); }
+/* the section you're in */
+.topnav a[aria-current] { color: var(--ink); border-color: var(--ink); }
 
 /* shared serif headings */
 .writing-head h1, .post-head h1 {
