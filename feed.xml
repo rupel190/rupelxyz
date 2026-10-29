@@ -6,6 +6,13 @@
   <atom:link href="https://rupel.xyz/feed.xml" rel="self" type="application/rss+xml"/>
   <description>Essays and notes by Christoph Rippel.</description>
   <item>
+    <title>The AI bubble was always going to have burst.</title>
+    <link>https://rupel.xyz/writing/ai-bubble-burst</link>
+    <guid>https://rupel.xyz/writing/ai-bubble-burst</guid>
+    <pubDate>Thu, 29 Oct 2026 12:00:00 GMT</pubDate>
+    <description>The attention economy isn't worth your attention.</description>
+  </item>
+  <item>
     <title>Claude is human too - how to organize CLAUDE.md so agents remember</title>
     <link>https://rupel.xyz/writing/organize-claude</link>
     <guid>https://rupel.xyz/writing/organize-claude</guid>

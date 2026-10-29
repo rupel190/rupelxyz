@@ -15,7 +15,7 @@
 import MarkdownIt from "markdown-it";
 import footnote from "markdown-it-footnote";
 import matter from "gray-matter";
-import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, statSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, statSync, copyFileSync } from "node:fs";
 import { join, basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
@@ -35,6 +35,50 @@ const md = new MarkdownIt({ html: true, linkify: true, typographer: true, breaks
 
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+// --- ```chart blocks → a bar chart drawn in the site's own design ---
+// The block is the YAML the Obsidian Charts plugin reads (type, labels, series: [{title, data}]),
+// so the note shows a chart in the vault too. Here it becomes plain HTML bars styled by blog.css —
+// never a screenshot of someone else's chart. `title` is ours (the plugin ignores it): the caption.
+// Only what a post has needed so far: one bar series. Anything else throws rather than guessing.
+const niceStep = (max: number, ticks = 3) => {
+  const raw = max / ticks;
+  const mag = 10 ** Math.floor(Math.log10(raw));
+  return [1, 2, 2.5, 5, 10].map((f) => f * mag).find((s) => s >= raw)!;
+};
+const chart = (src: string) => {
+  const spec = matter(`---\n${src}\n---`).data;
+  const labels: string[] = (spec.labels ?? []).map(String);
+  const data: number[] = (spec.series?.[0]?.data ?? []).map(Number);
+  if (spec.type !== "bar" || spec.series?.length !== 1 || !labels.length || data.length !== labels.length || data.some(isNaN)) {
+    throw new Error(`chart block: need type: bar, labels, and exactly one series whose data matches the labels.\n${src}`);
+  }
+  const max = Math.max(...data);
+  const step = niceStep(max || 1);
+  const top = Math.ceil(max / step) * step || step;
+  const pct = (v: number) => `${((v / top) * 100).toFixed(2)}%`;
+  const grid = Array.from({ length: top / step + 1 }, (_, i) => i * step)
+    .map((v) => `<div class="chart-grid" style="bottom:${pct(v)}"><span>${v.toLocaleString("en")}</span></div>`)
+    .join("");
+  const bars = data.map((v, i) => `<span class="chart-bar" style="height:${pct(v)}" title="${esc(labels[i])}: ${v.toLocaleString("en")}"></span>`).join("");
+  // Monthly labels (YYYY-MM) get one tick per January, labelled with the year; anything else
+  // gets about six evenly spaced labels.
+  const januaries = labels.flatMap((l, i) => (/^\d{4}-01$/.test(l) ? [i] : []));
+  const every = Math.ceil(labels.length / 6);
+  const ticks = (januaries.length ? januaries : labels.flatMap((_, i) => (i % every ? [] : [i])))
+    .map((i) => `<span style="grid-column:${i + 1}">${esc(januaries.length ? labels[i].slice(0, 4) : labels[i])}</span>`)
+    .join("");
+  const peak = data.indexOf(max);
+  const summary = `Bar chart, ${labels[0]} to ${labels.at(-1)}: ${data[0]} at the start, ${data.at(-1)} at the end, peak ${max} in ${labels[peak]}.`;
+  return `<figure class="chart" style="--n:${labels.length}">
+<div class="chart-plot" role="img" aria-label="${esc(summary)}">${grid}<div class="chart-bars">${bars}</div></div>
+<div class="chart-x" aria-hidden="true">${ticks}</div>
+${spec.title ? `<figcaption>${esc(String(spec.title))}</figcaption>\n` : ""}</figure>
+`;
+};
+const fence = md.renderer.rules.fence!;
+md.renderer.rules.fence = (tokens, idx, ...rest) =>
+  tokens[idx].info.trim() === "chart" ? chart(tokens[idx].content) : fence(tokens, idx, ...rest);
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const MONTHS_FULL = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -105,6 +149,27 @@ const resolveWikilinks = (text: string) =>
     return slug ? `[${shown}](/writing/${slug})` : shown;
   });
 
+// --- ![[image.png]] embeds → <img> served from /writing/media/ ---
+// Enveloppe pushes a note's attachments next to it in content/writing/, which is never served
+// (.assetsignore). Only images a published post embeds get copied out; the rest stays private.
+// Obsidian's `|300` sets a width; any other `|text` is alt text, unless Enveloppe merely repeated
+// the file name there. Embedded notes or PDFs fall through to resolveWikilinks as plain links.
+const IMAGE = /\.(png|jpe?g|gif|webp|avif|svg)$/i;
+const media = new Set<string>();
+const resolveEmbeds = (text: string, file: string) =>
+  text.replace(/!\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (m, target, label) => {
+    const name = basename(String(target).trim());
+    if (!IMAGE.test(name)) return m.slice(1);
+    if (!existsSync(join(SRC, name))) {
+      throw new Error(`content/writing/${file} embeds "${name}", which isn't in content/writing/ — did Enveloppe push the attachment?`);
+    }
+    media.add(name);
+    const shown = String(label ?? "").trim();
+    const width = /^\d+(x\d+)?$/.test(shown) ? shown.split("x")[0] : "";
+    const alt = width || shown === name ? "" : shown;
+    return `<img src="/writing/media/${encodeURI(name)}" alt="${esc(alt)}"${width ? ` width="${width}"` : ""} loading="lazy">`;
+  });
+
 const posts: Post[] = loaded.map((p) => ({
   slug: p.slug,
   title: String(p.data.title || p.slug),
@@ -112,7 +177,7 @@ const posts: Post[] = loaded.map((p) => ({
   description: String(p.data.description || ""),
   tags: Array.isArray(p.data.tags) ? p.data.tags.map(String) : [],
   rating: p.data.rating != null && p.data.rating !== "" ? Number(p.data.rating) : null,
-  html: md.render(resolveWikilinks(p.content)),
+  html: md.render(resolveWikilinks(resolveEmbeds(p.content, p.file))),
 }));
 
 // --- shared <head> ---
@@ -332,6 +397,8 @@ const stampHomepage = () => {
 rmSync(OUT, { recursive: true, force: true }); // clear stale pages so deleted posts don't linger
 mkdirSync(OUT, { recursive: true });
 for (const p of posts) writeFileSync(join(OUT, `${p.slug}.html`), postPage(p));
+if (media.size) mkdirSync(join(OUT, "media"));
+for (const name of media) copyFileSync(join(SRC, name), join(OUT, "media", name));
 writeFileSync(join(OUT, "index.html"), indexPage());
 writeFileSync(join(ROOT, "feed.xml"), feed());
 writeFileSync(join(ROOT, "sitemap.xml"), sitemap());

@@ -86,6 +86,20 @@ body::before {
 .prose pre code { background: none; padding: 0; }
 .prose ul, .prose ol { padding-left: 1.4em; }
 .prose hr { border: none; border-top: 1px solid var(--line); margin: 2em 0; }
+/* ```chart blocks, drawn by build.ts: --n is the number of bars */
+.prose .chart { margin: 2em 0; }
+.chart-plot { position: relative; height: 220px; margin-left: 2.8em; border-bottom: 1px solid var(--ink); }
+.chart-grid { position: absolute; left: 0; right: 0; border-top: 1px solid var(--line); }
+.chart-grid span, .chart-x { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); }
+.chart-grid span { position: absolute; right: 100%; transform: translateY(-50%); padding-right: 8px; line-height: 1; }
+.chart-bars, .chart-x { display: grid; grid-template-columns: repeat(var(--n), 1fr); column-gap: 0.6%; }
+.chart-bars { position: absolute; inset: 0; align-items: end; }
+.chart-bar { background: var(--warm); min-height: 1px; }
+.chart-bar:hover { background: var(--rust); }
+.chart-x { margin-left: 2.8em; }
+.chart-x span { grid-row: 1; white-space: nowrap; padding: 4px 0 0 5px; border-left: 1px solid var(--muted); }
+.chart figcaption { margin-top: 12px; color: var(--muted); font-style: italic; font-size: 0.92rem; }
+
 .prose .footnotes { font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--line); margin-top: 3em; padding-top: 1em; }
 
 .post-foot { margin-top: 64px; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; }
