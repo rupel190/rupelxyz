@@ -152,8 +152,9 @@ const resolveWikilinks = (text: string) =>
 // --- ![[image.png]] embeds → <img> served from /writing/media/ ---
 // Enveloppe pushes a note's attachments next to it in content/writing/, which is never served
 // (.assetsignore). Only images a published post embeds get copied out; the rest stays private.
-// Obsidian's `|300` sets a width; any other `|text` is alt text, unless Enveloppe merely repeated
-// the file name there. Embedded notes or PDFs fall through to resolveWikilinks as plain links.
+// `|alt text|300` → alt + width, like Obsidian: a trailing `|300` or `|300x200` is the width, the
+// rest is alt text, unless Enveloppe merely repeated the file name there. Embedded notes or PDFs
+// fall through to resolveWikilinks as plain links.
 const IMAGE = /\.(png|jpe?g|gif|webp|avif|svg)$/i;
 const media = new Set<string>();
 const resolveEmbeds = (text: string, file: string) =>
@@ -164,9 +165,10 @@ const resolveEmbeds = (text: string, file: string) =>
       throw new Error(`content/writing/${file} embeds "${name}", which isn't in content/writing/ — did Enveloppe push the attachment?`);
     }
     media.add(name);
-    const shown = String(label ?? "").trim();
-    const width = /^\d+(x\d+)?$/.test(shown) ? shown.split("x")[0] : "";
-    const alt = width || shown === name ? "" : shown;
+    const parts = String(label ?? "").split("|").map((s) => s.trim());
+    const width = /^\d+(x\d+)?$/.test(parts.at(-1) ?? "") ? parts.pop()!.split("x")[0] : "";
+    const shown = parts.join("|");
+    const alt = shown === name ? "" : shown;
     return `<img src="/writing/media/${encodeURI(name)}" alt="${esc(alt)}"${width ? ` width="${width}"` : ""} loading="lazy">`;
   });
 
