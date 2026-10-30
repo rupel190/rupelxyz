@@ -6,7 +6,7 @@
 //   - /feed.xml              an RSS feed
 //
 // Frontmatter (YAML, exactly what Obsidian/Templater write):
-//   title, date (YYYY-MM-DD), description, tags: [a, b], draft: true|false, slug?
+//   title, published | date | created (YYYY-MM-DD, first one set wins), description, tags: [a, b], draft: true|false, slug?
 //
 // Run:  bun run build
 //
@@ -85,6 +85,9 @@ const MONTHS_FULL = ["January", "February", "March", "April", "May", "June", "Ju
 // gray-matter/js-yaml parses an unquoted `date: 2026-06-24` into a Date object — normalize to YYYY-MM-DD.
 const toISODate = (d: unknown): string =>
   d instanceof Date ? d.toISOString().slice(0, 10) : String(d ?? "").slice(0, 10);
+// A post's date: when it went out (`published:`), else `date:`, else when the note was `created:`.
+// An empty `published:` parses as null, so unpublished drafts fall through to `created:`.
+const postDate = (data: Record<string, unknown>) => toISODate(data.published ?? data.date ?? data.created);
 const fmtDate = (d: string) => {
   const [y, m, day] = d.split("-").map(Number);
   return y ? `${MONTHS[(m || 1) - 1]} ${day}, ${y}` : d;
@@ -108,10 +111,10 @@ const loaded = readdirSync(SRC)
     return { slug: (data.slug as string) || basename(f, ".md"), file: f, data, content };
   })
   .filter((p) => !p.data.draft)
-  // Sort newest-first on a normalized ISO key. NB: js-yaml parses unquoted `date:`/`created:`
+  // Sort newest-first on a normalized ISO key. NB: js-yaml parses unquoted dates
   // into Date objects, and String(Date) is "Wed Jun 24 2026 …" — which localeCompare would sort
   // by weekday name, not chronologically. toISODate() collapses both to "YYYY-MM-DD" first.
-  .sort((a, b) => toISODate(b.data.date ?? b.data.created).localeCompare(toISODate(a.data.date ?? a.data.created)));
+  .sort((a, b) => postDate(b.data).localeCompare(postDate(a.data)));
 
 // --- slug collisions ---
 // Renaming a note in Obsidian creates a new file; the old one keeps its `slug:` and its
@@ -175,7 +178,7 @@ const resolveEmbeds = (text: string, file: string) =>
 const posts: Post[] = loaded.map((p) => ({
   slug: p.slug,
   title: String(p.data.title || p.slug),
-  date: toISODate(p.data.date ?? p.data.created),
+  date: postDate(p.data),
   description: String(p.data.description || ""),
   tags: Array.isArray(p.data.tags) ? p.data.tags.map(String) : [],
   rating: p.data.rating != null && p.data.rating !== "" ? Number(p.data.rating) : null,
