@@ -195,7 +195,7 @@ const posts: Post[] = loaded.map((p) => ({
 }));
 
 // --- shared <head> ---
-const FONTS = `<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">`;
+const FONTS = `<link rel="stylesheet" href="/assets/fonts.css">`;
 const head = (o: { title: string; desc: string; url: string; type?: string; published?: string }) => `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -209,11 +209,11 @@ const head = (o: { title: string; desc: string; url: string; type?: string; publ
 <meta property="og:description" content="${esc(o.desc)}">
 <meta property="og:type" content="${o.type || "website"}">
 <meta property="og:url" content="${o.url}">
-<meta property="og:image" content="${SITE}/og-image.png?v=2">
+<meta property="og:image" content="${SITE}/og-image.png?v=3">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${esc(o.title)}">
 <meta name="twitter:description" content="${esc(o.desc)}">
-<meta name="twitter:image" content="${SITE}/og-image.png?v=2">
+<meta name="twitter:image" content="${SITE}/og-image.png?v=3">
 ${o.published ? `<meta property="article:published_time" content="${o.published}">\n` : ""}<link rel="alternate" type="application/rss+xml" title="${AUTHOR} — Writing" href="${SITE}/feed.xml">
 ${FONTS}
 <link rel="stylesheet" href="/assets/blog.css">
