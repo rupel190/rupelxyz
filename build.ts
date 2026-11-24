@@ -20,7 +20,6 @@ import { join, basename, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 
-// Works under both Node and Bun (Bun also has import.meta.dir, but this is portable).
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const SRC = join(ROOT, "content", "writing");
 const OUT = join(ROOT, "writing");
@@ -158,8 +157,14 @@ const resolveWikilinks = (text: string) =>
 // `|alt text|300` → alt + width, like Obsidian: a trailing `|300` or `|300x200` is the width, the
 // rest is alt text, unless Enveloppe merely repeated the file name there. Embedded notes or PDFs
 // fall through to resolveWikilinks as plain links.
+//
+// A note's attachment is whatever was pasted into the vault (one was a 17 MB PNG), so photos and
+// screenshots are served as WebP, no wider than MEDIA_WIDTH. GIFs (may be animated) and SVGs are
+// copied as they are.
 const IMAGE = /\.(png|jpe?g|gif|webp|avif|svg)$/i;
-const media = new Set<string>();
+const RECODE = /\.(png|jpe?g|webp|avif)$/i;
+const MEDIA_WIDTH = 1248; // twice the post column (680px minus its padding), for high-density screens
+const media = new Map<string, string>(); // served name → attachment
 const resolveEmbeds = (text: string, file: string) =>
   text.replace(/!\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (m, target, label) => {
     const name = basename(String(target).trim());
@@ -167,12 +172,16 @@ const resolveEmbeds = (text: string, file: string) =>
     if (!existsSync(join(SRC, name))) {
       throw new Error(`content/writing/${file} embeds "${name}", which isn't in content/writing/ — did Enveloppe push the attachment?`);
     }
-    media.add(name);
+    const served = name.replace(RECODE, ".webp");
+    if (media.has(served) && media.get(served) !== name) {
+      throw new Error(`content/writing/${file}: "${name}" and "${media.get(served)}" would both be served as ${served} — rename one.`);
+    }
+    media.set(served, name);
     const parts = String(label ?? "").split("|").map((s) => s.trim());
     const width = /^\d+(x\d+)?$/.test(parts.at(-1) ?? "") ? parts.pop()!.split("x")[0] : "";
     const shown = parts.join("|");
     const alt = shown === name ? "" : shown;
-    return `<img src="/writing/media/${encodeURI(name)}" alt="${esc(alt)}"${width ? ` width="${width}"` : ""} loading="lazy">`;
+    return `<img src="/writing/media/${encodeURI(served)}" alt="${esc(alt)}"${width ? ` width="${width}"` : ""} loading="lazy">`;
   });
 
 const posts: Post[] = loaded.map((p) => ({
@@ -403,7 +412,18 @@ rmSync(OUT, { recursive: true, force: true }); // clear stale pages so deleted p
 mkdirSync(OUT, { recursive: true });
 for (const p of posts) writeFileSync(join(OUT, `${p.slug}.html`), postPage(p));
 if (media.size) mkdirSync(join(OUT, "media"));
-for (const name of media) copyFileSync(join(SRC, name), join(OUT, "media", name));
+for (const [served, name] of media) {
+  const from = join(SRC, name);
+  const to = join(OUT, "media", served);
+  if (!RECODE.test(name)) {
+    copyFileSync(from, to);
+    continue;
+  }
+  const image = new Bun.Image(from);
+  const { width } = await image.metadata();
+  writeFileSync(to, await image.resize(Math.min(width, MEDIA_WIDTH)).webp({ quality: 82 }).buffer());
+  console.log(`${name} → ${served}: ${Math.round(statSync(from).size / 1024)} → ${Math.round(statSync(to).size / 1024)} KB`);
+}
 writeFileSync(join(OUT, "index.html"), indexPage());
 writeFileSync(join(ROOT, "feed.xml"), feed());
 writeFileSync(join(ROOT, "sitemap.xml"), sitemap());

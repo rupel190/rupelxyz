@@ -6,6 +6,13 @@
   <atom:link href="https://rupel.xyz/feed.xml" rel="self" type="application/rss+xml"/>
   <description>Essays and notes by Christoph Rippel.</description>
   <item>
+    <title>Slop wasn't a thing before AI</title>
+    <link>https://rupel.xyz/writing/slop-before-ai</link>
+    <guid>https://rupel.xyz/writing/slop-before-ai</guid>
+    <pubDate>Fri, 30 Oct 2026 12:00:00 GMT</pubDate>
+    <description>The same design of everyday things: grey cars and identical phones were slop long before AI.</description>
+  </item>
+  <item>
     <title>The AI bubble was always going to have burst.</title>
     <link>https://rupel.xyz/writing/ai-bubble-burst</link>
     <guid>https://rupel.xyz/writing/ai-bubble-burst</guid>
